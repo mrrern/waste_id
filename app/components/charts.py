@@ -88,20 +88,24 @@ def stat_card_chart(
 
 def html_legend() -> rx.Component:
     legend_items = [
-        ("CPU", "bg-cyan-400"),
-        ("Memory", "bg-purple-500"),
-        ("Network", "bg-teal-500"),
+        ("Generado", "bg-cyan-400", "Volumen total de E-Waste (kt)"),
+        ("Reciclado", "bg-purple-500", "Tasa de recolección formal (%)"),
+        ("Valor", "bg-teal-500", "Valor potencial de materiales (M USD)"),
     ]
     return rx.el.div(
         rx.foreach(
             legend_items,
             lambda item: rx.el.div(
                 rx.el.div(class_name=f"w-3 h-3 rounded-full {item[1]}"),
-                rx.el.span(item[0], class_name="ml-2 text-sm text-gray-300"),
+                rx.el.div(
+                    rx.el.span(item[0], class_name="text-sm font-medium text-gray-200"),
+                    rx.el.span(item[2], class_name="text-xs text-gray-400"),
+                    class_name="ml-2 flex flex-col",
+                ),
                 class_name="flex items-center",
             ),
         ),
-        class_name="flex justify-center space-x-6 pt-4",
+        class_name="flex flex-col sm:flex-row justify-center items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-6 pt-4",
     )
 
 
@@ -132,7 +136,7 @@ def performance_line_chart(data: rx.Var[list[PerformanceChartData]]) -> rx.Compo
                 stroke="#22d3ee",
                 stroke_width=2,
                 dot=False,
-                name="CPU",
+                name="Generado",
             ),
             rx.recharts.line(
                 data_key="Memory",
@@ -140,7 +144,7 @@ def performance_line_chart(data: rx.Var[list[PerformanceChartData]]) -> rx.Compo
                 stroke="#a855f7",
                 stroke_width=2,
                 dot=False,
-                name="Memory",
+                name="Reciclado",
             ),
             rx.recharts.line(
                 data_key="Network",
@@ -148,7 +152,7 @@ def performance_line_chart(data: rx.Var[list[PerformanceChartData]]) -> rx.Compo
                 stroke="#14b8a6",
                 stroke_width=2,
                 dot=False,
-                name="Network",
+                name="Valor",
             ),
             data=data,
             width="100%",

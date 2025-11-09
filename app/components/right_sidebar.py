@@ -115,7 +115,7 @@ def resource_allocation_item(resource: ResourceAllocationData) -> rx.Component:
 def resource_allocation_section() -> rx.Component:
     return rx.el.div(
         rx.el.h3(
-            "Resource Allocation",
+            "Asignación de Recursos",
             class_name="text-sm sm:text-base font-semibold text-gray-300 mb-3",
         ),
         rx.foreach(DashboardState.resource_allocation, resource_allocation_item),

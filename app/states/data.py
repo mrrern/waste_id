@@ -1,7 +1,7 @@
 resource_allocation_data = [
-    {"name": "Processing Power", "value": 42, "color": "cyan"},
-    {"name": "Memory Allocation", "value": 68, "color": "pink"},
-    {"name": "Network Bandwidth", "value": 35, "color": "blue"},
+    {"name": "Recuperación de Materiales", "value": 42, "color": "cyan"},
+    {"name": "Componentes Reutilizados", "value": 68, "color": "pink"},
+    {"name": "Baterías Recicladas", "value": 35, "color": "blue"},
 ]
 quick_actions_data = [
     {"name": "Security Scan", "icon": "shield-check"},
@@ -24,16 +24,13 @@ paises_latam = [
     "Toda Latinoamérica",
     "Argentina",
     "Bolivia",
-    "Brasil",
     "Chile",
-    "Colombia",
     "Costa Rica",
     "Cuba",
     "Ecuador",
     "El Salvador",
     "Guatemala",
     "Honduras",
-    "México",
     "Nicaragua",
     "Panamá",
     "Paraguay",

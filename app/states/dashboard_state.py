@@ -19,6 +19,7 @@ class StatCardData(TypedDict):
     icon: str
     color: str
     chart_data: list[dict[str, int]]
+    description: str
 
 
 class RecyclingData(TypedDict):
@@ -82,6 +83,7 @@ def _create_stat_cards(
             ]
             if generated_kt > 10
             else [{"v": 1}] * 10,
+            "description": "Total de residuos de aparatos eléctricos y electrónicos (RAEE) generados en kilotoneladas. Incluye desde electrodomésticos hasta celulares.",
         },
         {
             "title": "Tasa de Recolección Formal",
@@ -90,6 +92,7 @@ def _create_stat_cards(
             "icon": "recycle",
             "color": "purple",
             "chart_data": [{"v": int(collected_rate)}] * 10,
+            "description": "Porcentaje del E-Waste que se recolecta a través de canales oficiales y seguros, garantizando un tratamiento ambientalmente adecuado.",
         },
         {
             "title": "Valor Económico Potencial",
@@ -107,6 +110,7 @@ def _create_stat_cards(
             ]
             if value_potential > 10
             else [{"v": 1}] * 10,
+            "description": "Valor estimado (en millones de USD) de los materiales crudos secundarios (oro, cobre, etc.) que podrían recuperarse del E-Waste.",
         },
         {
             "title": "Trazabilidad de Cadena de Valor",
@@ -126,6 +130,7 @@ def _create_stat_cards(
                 {"v": 75},
                 {"v": 100},
             ],
+            "description": "Impacto socioeconómico de la gestión formal. Cada tonelada reciclada puede generar empleos y añadir valor a la economía local.",
         },
     ]
 
@@ -139,7 +144,7 @@ class DashboardState(rx.State):
     uptime: str = "14d 06:42:18"
     time_zone: str = "UTC-08:00"
     active_nav: str = "Visión 360°"
-    active_performance_tab: str = "Performance"
+    active_performance_tab: str = "Resumen Estadístico"
     mobile_sidebar_open: bool = False
     stat_cards: list[StatCardData] = []
     paises: list[str] = paises_latam

@@ -23,10 +23,13 @@ def stat_card(card_data: StatCardData) -> rx.Component:
                 rx.icon(tag=card_data["icon"], class_name="size-6"),
                 class_name=f"p-3 rounded-lg bg-gradient-to-br from-{color}-500 to-{color}-600 text-white shadow-lg",
             ),
-            class_name="flex justify-between items-start mb-3",
+            class_name="flex justify-between items-start",
+        ),
+        rx.el.p(
+            card_data["description"], class_name="text-xs text-gray-400 mt-2 mb-3 h-10"
         ),
         stat_card_chart(card_data["chart_data"], card_data["color"]),
-        class_name="bg-gray-800/50 border border-gray-700/50 rounded-xl p-4 shadow-md backdrop-blur-sm hover:bg-gray-800/70 transition-colors duration-200",
+        class_name="bg-gray-800/50 border border-gray-700/50 rounded-xl p-4 shadow-md backdrop-blur-sm hover:bg-gray-800/70 transition-colors duration-200 flex flex-col",
     )
 
 
@@ -34,30 +37,34 @@ def performance_section() -> rx.Component:
     return rx.el.div(
         rx.el.div(
             rx.el.button(
-                "Performance",
+                "Resumen Estadístico",
                 on_click=lambda: DashboardState.set_active_performance_tab(
-                    "Performance"
+                    "Resumen Estadístico"
                 ),
                 class_name=rx.cond(
-                    DashboardState.active_performance_tab == "Performance",
+                    DashboardState.active_performance_tab == "Resumen Estadístico",
                     "px-3 py-2 text-xs sm:px-4 sm:py-2 sm:text-sm font-medium text-white bg-cyan-600 rounded-md focus:outline-none",
                     "px-3 py-2 text-xs sm:px-4 sm:py-2 sm:text-sm font-medium text-gray-400 hover:text-gray-200 hover:bg-gray-700 rounded-md focus:outline-none transition-colors duration-150",
                 ),
             ),
             rx.el.button(
-                "Processes",
-                on_click=lambda: DashboardState.set_active_performance_tab("Processes"),
+                "Detalle por Material",
+                on_click=lambda: DashboardState.set_active_performance_tab(
+                    "Detalle por Material"
+                ),
                 class_name=rx.cond(
-                    DashboardState.active_performance_tab == "Processes",
+                    DashboardState.active_performance_tab == "Detalle por Material",
                     "px-3 py-2 text-xs sm:px-4 sm:py-2 sm:text-sm font-medium text-white bg-cyan-600 rounded-md focus:outline-none",
                     "px-3 py-2 text-xs sm:px-4 sm:py-2 sm:text-sm font-medium text-gray-400 hover:text-gray-200 hover:bg-gray-700 rounded-md focus:outline-none transition-colors duration-150",
                 ),
             ),
             rx.el.button(
-                "Storage",
-                on_click=lambda: DashboardState.set_active_performance_tab("Storage"),
+                "Impacto Económico",
+                on_click=lambda: DashboardState.set_active_performance_tab(
+                    "Impacto Económico"
+                ),
                 class_name=rx.cond(
-                    DashboardState.active_performance_tab == "Storage",
+                    DashboardState.active_performance_tab == "Impacto Económico",
                     "px-3 py-2 text-xs sm:px-4 sm:py-2 sm:text-sm font-medium text-white bg-cyan-600 rounded-md focus:outline-none",
                     "px-3 py-2 text-xs sm:px-4 sm:py-2 sm:text-sm font-medium text-gray-400 hover:text-gray-200 hover:bg-gray-700 rounded-md focus:outline-none transition-colors duration-150",
                 ),
@@ -66,11 +73,13 @@ def performance_section() -> rx.Component:
         ),
         rx.el.div(
             rx.cond(
-                DashboardState.active_performance_tab == "Performance",
+                DashboardState.active_performance_tab == "Resumen Estadístico",
                 rx.el.div(
                     performance_line_chart(DashboardState.performance_chart_data),
                     rx.el.div(
-                        rx.el.p("System Load", class_name="text-xs text-gray-400"),
+                        rx.el.p(
+                            "Tendencia General", class_name="text-xs text-gray-400"
+                        ),
                         rx.el.p(
                             DashboardState.system_load.to_string() + "%",
                             class_name="text-xl font-bold text-gray-100",
@@ -81,7 +90,9 @@ def performance_section() -> rx.Component:
                 ),
                 rx.el.div(
                     rx.el.p(
-                        "Content for " + DashboardState.active_performance_tab,
+                        "Datos para "
+                        + DashboardState.active_performance_tab
+                        + " próximamente.",
                         class_name="text-gray-400 p-10 text-center",
                     )
                 ),
