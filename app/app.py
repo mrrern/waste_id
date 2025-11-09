@@ -27,7 +27,7 @@ def index() -> rx.Component:
             None,
         ),
         class_name="flex h-screen bg-gray-950 text-gray-300 relative",
-        on_mount=DashboardState.update_time,
+        on_mount=DashboardState.load_data,
     )
 
 
