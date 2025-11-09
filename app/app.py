@@ -2,7 +2,7 @@ import reflex as rx
 from app.components.main_content import main_content
 from app.components.template import template
 from app.states.dashboard_state import DashboardState
-from app.pages import mapeo_de_flujos, trazabilidad, calculadora_de_impacto, datos_abiertos
+from app.pages import mapeo_de_flujos, trazabilidad, calculadora_de_impacto, datos_abiertos, about
 
 @rx.page(route="/", title="Waste ID")
 def index() -> rx.Component:
@@ -20,3 +20,4 @@ app.add_page(mapeo_de_flujos, route="/mapeo-de-flujos")
 app.add_page(trazabilidad, route="/trazabilidad")
 app.add_page(calculadora_de_impacto, route="/calculadora-de-impacto")
 app.add_page(datos_abiertos, route="/datos-abiertos")
+app.add_page(about, route="/about")

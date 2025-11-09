@@ -327,4 +327,5 @@ class DashboardState(rx.State):
                 "route": "/calculadora-de-impacto",
             },
             {"name": "Datos Abiertos", "icon": "database", "route": "/datos-abiertos"},
+            {"name": "Acerca de", "icon": "users", "route": "/about"},
         ]

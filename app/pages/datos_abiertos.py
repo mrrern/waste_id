@@ -1,11 +1,8 @@
-
 import reflex as rx
 from app.components.template import template
+from app.components.datos_abiertos.sources import datos_abiertos_dashboard
 
 @rx.page(route="/datos-abiertos")
-def datos_abiertos():
-    content = rx.container(
-        rx.heading("Datos Abiertos", size="5"),
-        rx.text("Contenido de la página Datos Abiertos."),
-    )
-    return template(page_content=content)
+def datos_abiertos() -> rx.Component:
+    """Datos Abiertos page."""
+    return template(page_content=datos_abiertos_dashboard())
