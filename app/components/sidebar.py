@@ -80,6 +80,10 @@ def sidebar() -> rx.Component:
                     rx.foreach(DashboardState.recycling_data, recycling_data_item),
                     class_name="px-4",
                 ),
+                rx.el.p(
+                    "Fuente: Our World in Data (2022)",
+                    class_name="px-4 mt-2 text-[10px] text-gray-500",
+                ),
                 class_name="mt-auto pt-6 border-t border-gray-700/50 hidden md:block",
             ),
             class_name="flex flex-col h-full",
