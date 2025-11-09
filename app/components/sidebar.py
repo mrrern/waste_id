@@ -39,7 +39,7 @@ def sidebar() -> rx.Component:
     return rx.el.aside(
         rx.el.div(
             rx.el.div(
-                rx.icon(tag="globe", class_name="size-8 text-cyan-400 mr-3"),
+                rx.image(src="/WasteID.png", class_name="h-8 w-auto mr-3"),
                 rx.el.h1(
                     "WasteID",
                     class_name="text-xl font-bold text-gray-100 tracking-wider",
