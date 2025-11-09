@@ -100,17 +100,18 @@ def main_content() -> rx.Component:
                         tag="bar-chart-2",
                         class_name="mr-2 text-cyan-400 hidden sm:inline-block",
                     ),
-                    "System Overview",
+                    "Panorama E-WASTE en LATAM",
                     class_name="text-lg sm:text-xl font-semibold text-gray-200 flex items-center",
                 ),
                 rx.el.div(
-                    rx.el.span(
-                        "LIVE",
-                        class_name="text-xs font-bold text-green-400 bg-green-900/50 px-2 py-1 rounded-full mr-2",
-                    ),
-                    rx.icon(
-                        tag="refresh-cw",
-                        class_name="text-gray-400 hover:text-gray-200 cursor-pointer",
+                    rx.el.select(
+                        rx.foreach(
+                            DashboardState.paises,
+                            lambda pais: rx.el.option(pais, value=pais),
+                        ),
+                        value=DashboardState.selected_pais,
+                        on_change=DashboardState.set_selected_pais,
+                        class_name="bg-gray-800 border border-gray-700 text-gray-300 text-sm rounded-lg focus:ring-cyan-500 focus:border-cyan-500 block w-full p-2.5",
                     ),
                     class_name="flex items-center",
                 ),
@@ -118,7 +119,11 @@ def main_content() -> rx.Component:
             ),
             rx.el.div(
                 rx.foreach(DashboardState.stat_cards, stat_card),
-                class_name="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4",
+                class_name="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4",
+            ),
+            rx.el.p(
+                "Fuente: The Global E-waste Monitor 2020 y cálculos propios basados en datos de UNU/UNITAR.",
+                class_name="text-xs text-gray-500 mt-4 text-center",
             ),
             class_name="mb-6",
         ),

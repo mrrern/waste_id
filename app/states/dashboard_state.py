@@ -3,6 +3,7 @@ import datetime
 from typing import TypedDict
 import reflex as rx
 from app.states.data import (
+    paises_latam,
     performance_chart_data,
     quick_actions_data,
     resource_allocation_data,
@@ -54,6 +55,8 @@ class DashboardState(rx.State):
     active_performance_tab: str = "Performance"
     mobile_sidebar_open: bool = False
     stat_cards: list[StatCardData] = stat_card_data
+    paises: list[str] = paises_latam
+    selected_pais: str = "Toda Latinoamérica"
     recycling_data: list[RecyclingData] = [
         {"region": "Latam & Caribbean", "rate": 2.75, "color": "red"},
         {"region": "Europe", "rate": 42.77, "color": "blue"},
@@ -82,6 +85,10 @@ class DashboardState(rx.State):
     @rx.event
     def set_active_performance_tab(self, tab_name: str):
         self.active_performance_tab = tab_name
+
+    @rx.event
+    def set_selected_pais(self, pais: str):
+        self.selected_pais = pais
 
     @rx.event
     def toggle_mobile_sidebar(self):
