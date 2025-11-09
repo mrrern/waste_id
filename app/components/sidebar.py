@@ -52,11 +52,8 @@ def sidebar() -> rx.Component:
     return rx.el.aside(
         rx.el.div(
             rx.el.div(
-                rx.image(src="/WasteID.png", class_name="h-8 w-auto mr-3"),
-                rx.el.h1(
-                    "WasteID",
-                    class_name="text-xl font-bold text-gray-100 tracking-wider",
-                ),
+            rx.image(src="/WasteID.png", class_name=" h-auto px-24 mb-auto mr-6"),
+                
                 rx.el.button(
                     rx.icon(tag="x", class_name="size-5"),
                     on_click=DashboardState.toggle_mobile_sidebar,

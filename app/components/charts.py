@@ -123,42 +123,98 @@ def performance_line_chart(data: rx.Var[list[PerformanceChartData]]) -> rx.Compo
                 tick_margin=10,
                 style={"fontSize": "12px"},
             ),
-            rx.recharts.y_axis(
-                axis_line=False,
-                tick_line=False,
-                tick_margin=10,
-                domain=[0, 100],
-                style={"fontSize": "12px"},
-            ),
-            rx.recharts.line(
-                data_key="CPU",
-                type_="monotone",
-                stroke="#22d3ee",
-                stroke_width=2,
-                dot=False,
-                name="Generado",
-            ),
-            rx.recharts.line(
-                data_key="Memory",
-                type_="monotone",
-                stroke="#a855f7",
-                stroke_width=2,
-                dot=False,
-                name="Reciclado",
-            ),
-            rx.recharts.line(
-                data_key="Network",
-                type_="monotone",
-                stroke="#14b8a6",
-                stroke_width=2,
-                dot=False,
-                name="Valor",
-            ),
+                    # Left axis: volume (kt)
+                    rx.recharts.y_axis(
+                        y_axis_id="left",
+                        axis_line=False,
+                        tick_line=False,
+                        tick_margin=10,
+                        orientation="left",
+                        style={"fontSize": "12px"},
+                    ),
+                    # Right axis: economic value (M USD)
+                    rx.recharts.y_axis(
+                        y_axis_id="right",
+                        axis_line=False,
+                        tick_line=False,
+                        tick_margin=10,
+                        orientation="right",
+                        style={"fontSize": "12px"},
+                    ),
+                    # Secondary axis for percentage (0-100)
+                    rx.recharts.y_axis(
+                        y_axis_id="pct",
+                        axis_line=False,
+                        tick_line=False,
+                        tick_margin=10,
+                        domain=[0, 100],
+                        orientation="right",
+                        style={"fontSize": "12px", "color": "#a855f7"},
+                    ),
+
+                    rx.recharts.line(
+                        data_key="raee_kt",
+                        y_axis_id="left",
+                        type_="monotone",
+                        stroke="#22d3ee",
+                        stroke_width=2,
+                        dot=False,
+                        name="Generado (kt)",
+                    ),
+                    rx.recharts.line(
+                        data_key="recoleccion_pct",
+                        y_axis_id="pct",
+                        type_="monotone",
+                        stroke="#a855f7",
+                        stroke_width=2,
+                        dot=False,
+                        name="Tasa de recolección (%)",
+                    ),
+                    rx.recharts.line(
+                        data_key="valor_musd",
+                        y_axis_id="right",
+                        type_="monotone",
+                        stroke="#14b8a6",
+                        stroke_width=2,
+                        dot=False,
+                        name="Valor (M USD)",
+                    ),
             data=data,
             width="100%",
             height=300,
             margin={"top": 5, "right": 20, "left": -10, "bottom": 5},
         ),
         html_legend(),
+        class_name=RECHART_WRAPPER_CLASS,
+    )
+
+
+def material_line_chart(data: rx.Var[list[dict]]) -> rx.Component:
+    """Line chart for critical metals detail.
+
+    Expects items with keys: 'metal', 'recovered_t' (tons) and 'recovered_value_usd'.
+    """
+    return rx.el.div(
+        rx.recharts.line_chart(
+            rx.recharts.cartesian_grid(stroke_dasharray="3 3", stroke="#374151", vertical=False),
+            rx.recharts.tooltip(**TOOLTIP_PROPS),
+            rx.recharts.x_axis(data_key="metal", axis_line=False, tick_line=False, tick_margin=10, style={"fontSize": "12px"}),
+            # Left axis: tons recovered
+            rx.recharts.y_axis(y_axis_id="left", axis_line=False, tick_line=False, tick_margin=10, orientation="left", style={"fontSize": "12px"}),
+            # Right axis: USD value
+            rx.recharts.y_axis(y_axis_id="right", axis_line=False, tick_line=False, tick_margin=10, orientation="right", style={"fontSize": "12px"}),
+            rx.recharts.line(data_key="recovered_t", y_axis_id="left", type_="monotone", stroke="#22d3ee", stroke_width=2, dot=False, name="Toneladas recuperadas"),
+            rx.recharts.line(data_key="recovered_value_usd", y_axis_id="right", type_="monotone", stroke="#14b8a6", stroke_width=2, dot=False, name="Valor recuperado (USD)"),
+            data=data,
+            width="100%",
+            height=300,
+            margin={"top": 5, "right": 20, "left": -10, "bottom": 5},
+        ),
+        # small legend
+        rx.el.div(
+            rx.el.span("Toneladas recuperadas", class_name="text-xs text-gray-300 mr-4"),
+            rx.el.span("Valor recuperado (USD)", class_name="text-xs text-gray-300"),
+            class_name="pt-4",
+        ),
         class_name=RECHART_WRAPPER_CLASS,
     )

@@ -1,0 +1,11 @@
+metal,concentracion_ppm,valor_usd_kg,criticidad
+Oro,100,60000.0,Alta
+Plata,500,750.0,Media
+Paladio,50,70000.0,Alta
+Cobre,100000,8.5,Media
+Aluminio,130000,2.0,Baja
+Hierro,500000,0.5,Baja
+Estaño,20000,25.0,Media
+Níquel,15000,18.0,Media
+Cobalto,500,50.0,Alta
+Tierras Raras,100,150.0,Alta

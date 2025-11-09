@@ -1,40 +1,22 @@
 import reflex as rx
-from app.components.header import dashboard_header
 from app.components.main_content import main_content
-from app.components.right_sidebar import right_sidebar
-from app.components.sidebar import sidebar
+from app.components.template import template
 from app.states.dashboard_state import DashboardState
+from app.pages import mapeo_de_flujos, trazabilidad, calculadora_de_impacto, datos_abiertos
 
-
+@rx.page(route="/", title="Waste ID")
 def index() -> rx.Component:
-    return rx.el.div(
-        sidebar(),
-        rx.el.div(
-            dashboard_header(),
-            rx.el.div(
-                main_content(),
-                right_sidebar(),
-                class_name="flex flex-1 overflow-hidden",
-            ),
-            class_name="flex flex-col flex-1 overflow-hidden",
-        ),
-        rx.cond(
-            DashboardState.mobile_sidebar_open,
-            rx.el.div(
-                on_click=DashboardState.toggle_mobile_sidebar,
-                class_name="fixed inset-0 bg-black/50 z-30 md:hidden",
-            ),
-            None,
-        ),
-        class_name="flex h-screen bg-gray-950 text-gray-300 relative",
-        on_mount=DashboardState.load_data,
-    )
+    return template(page_content=main_content())
 
 
 app = rx.App(
-    theme=rx.theme(appearance="light"),
+    theme=rx.theme(appearance="dark", accent_color="green"),
     stylesheets=[
         "https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.29.0/feather.min.js"
     ],
 )
-app.add_page(index)
+app.add_page(index, route="/", title="WastedID")
+app.add_page(mapeo_de_flujos, route="/mapeo-de-flujos")
+app.add_page(trazabilidad, route="/trazabilidad")
+app.add_page(calculadora_de_impacto, route="/calculadora-de-impacto")
+app.add_page(datos_abiertos, route="/datos-abiertos")

@@ -4,9 +4,11 @@ import logging
 from typing import TypedDict
 import reflex as rx
 import pandas as pd
+from pathlib import Path
 from app.states.data import (
     paises_latam,
     performance_chart_data,
+    critical_metals_data,
     quick_actions_data,
     resource_allocation_data,
 )
@@ -19,7 +21,7 @@ class StatCardData(TypedDict):
     icon: str
     color: str
     chart_data: list[dict[str, int]]
-    description: str
+    
 
 
 class RecyclingData(TypedDict):
@@ -41,9 +43,9 @@ class QuickActionData(TypedDict):
 
 class PerformanceChartData(TypedDict):
     time: str
-    CPU: int
-    Memory: int
-    Network: int
+    raee_kt: int
+    recoleccion_pct: int
+    valor_musd: int
 
 
 def _create_stat_cards(
@@ -158,7 +160,9 @@ class DashboardState(rx.State):
     resource_allocation: list[ResourceAllocationData] = resource_allocation_data
     quick_actions: list[QuickActionData] = quick_actions_data
     performance_chart_data: list[PerformanceChartData] = performance_chart_data
-    system_load: int = 35
+    # holds the currently computed list of critical metals for the selected scope (country or total)
+    critical_metals_detail: list[dict] = []
+    system_load: int = 120
 
     @rx.event(background=True)
     async def load_data(self):
@@ -195,6 +199,10 @@ class DashboardState(rx.State):
         self.active_nav = nav_item
         if self.mobile_sidebar_open:
             self.mobile_sidebar_open = False
+        
+        for item in self.nav_items:
+            if item["name"] == nav_item:
+                return rx.redirect(item["route"])
 
     @rx.event
     def set_active_performance_tab(self, tab_name: str):
@@ -225,6 +233,83 @@ class DashboardState(rx.State):
                 )
             else:
                 self.stat_cards = _create_stat_cards(self._df_raee, is_total=True)
+        # Update critical metals detail for the selected country (keeps UI in sync)
+        try:
+            self.set_critical_metals_for_pais(pais)
+        except Exception:
+            # Defensive: do not raise during UI events
+            logging.exception("Failed to update critical metals for pais")
+
+    @rx.event
+    def set_critical_metals_for_pais(self, pais: str | None = None):
+        """Compute and store critical metals estimates for `pais`.
+
+        If `pais` is None the currently selected country is used. For
+        "Toda Latinoamérica" the precomputed `critical_metals_data` from
+        `app.states.data` is used.
+        """
+        target = pais or self.selected_pais
+        if self._df_raee.empty:
+            try:
+                self._df_raee = pd.read_csv("assets/dataset_raee_latam_completo.csv")
+                self._df_raee["pais"] = self._df_raee["pais"].replace(
+                    {
+                        "Bolivia (Plurinational State of)": "Bolivia",
+                        "Venezuela (Bolivarian Republic of)": "Venezuela",
+                    }
+                )
+            except FileNotFoundError as e:
+                logging.exception(f"Error loading CSV: {e}")
+                self.critical_metals_detail = []
+                return
+
+        if target == "Toda Latinoamérica":
+            self.critical_metals_detail = critical_metals_data
+            return
+
+        country_df = self._df_raee[self._df_raee["pais"] == target]
+        if country_df.empty:
+            self.critical_metals_detail = []
+            return
+
+        # Estimate recycled mass for the country (kt -> kg)
+        recolectado = country_df.get("raee_recolectado_kt", pd.Series([0.0] * len(country_df))).fillna(0.0).astype(float)
+        tasa_reciclaje = country_df.get("tasa_reciclaje_%", pd.Series([0.0] * len(country_df))).fillna(0.0).astype(float)
+        total_recycled_kt = (recolectado * (tasa_reciclaje / 100.0)).sum()
+        total_recycled_kg = total_recycled_kt * 1_000_000.0
+
+        assets_dir = Path(__file__).resolve().parents[2] / "assets"
+        metals_path = assets_dir / "metales_criticos_raee.csv"
+        try:
+            mdf = pd.read_csv(metals_path)
+        except Exception:
+            self.critical_metals_detail = []
+            return
+
+        metals_list: list[dict] = []
+        for _, row in mdf.iterrows():
+            metal = str(row.get("metal", "unknown"))
+            conc_ppm = float(row.get("concentracion_ppm", 0.0))
+            valor_usd_kg = float(row.get("valor_usd_kg", 0.0))
+            criticidad = str(row.get("criticidad", "Desconocida"))
+
+            recovered_kg = total_recycled_kg * (conc_ppm / 1_000_000.0)
+            recovered_value = recovered_kg * valor_usd_kg
+
+            metals_list.append(
+                {
+                    "metal": metal,
+                    "concentracion_ppm": conc_ppm,
+                    "recovered_kg": round(recovered_kg, 3),
+                    "recovered_t": round(recovered_kg / 1000.0, 6),
+                    "recovered_value_usd": round(recovered_value, 2),
+                    "valor_usd_kg": valor_usd_kg,
+                    "criticidad": criticidad,
+                }
+            )
+
+        metals_list.sort(key=lambda x: x["recovered_value_usd"], reverse=True)
+        self.critical_metals_detail = metals_list
 
     @rx.event
     def toggle_mobile_sidebar(self):
@@ -233,9 +318,13 @@ class DashboardState(rx.State):
     @rx.var
     def nav_items(self) -> list[dict[str, str]]:
         return [
-            {"name": "Visión 360°", "icon": "layout-dashboard"},
-            {"name": "Mapeo de flujos", "icon": "map"},
-            {"name": "Trazabilidad", "icon": "package"},
-            {"name": "Calculadora de Impacto", "icon": "calculator"},
-            {"name": "Datos Abiertos", "icon": "database"},
+            {"name": "Visión 360°", "icon": "layout-dashboard", "route": "/"},
+            {"name": "Mapeo de Flujos", "icon": "map", "route": "/mapeo-de-flujos"},
+            {"name": "Trazabilidad", "icon": "package", "route": "/trazabilidad"},
+            {
+                "name": "Calculadora de Impacto",
+                "icon": "calculator",
+                "route": "/calculadora-de-impacto",
+            },
+            {"name": "Datos Abiertos", "icon": "database", "route": "/datos-abiertos"},
         ]
