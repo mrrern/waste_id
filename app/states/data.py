@@ -57,11 +57,6 @@ stat_card_data = [
         ],
     },
 ]
-system_status_data = [
-    {"name": "Core Systems", "value": 89, "color": "green"},
-    {"name": "Security", "value": 75, "color": "cyan"},
-    {"name": "Network", "value": 86, "color": "blue"},
-]
 resource_allocation_data = [
     {"name": "Processing Power", "value": 42, "color": "cyan"},
     {"name": "Memory Allocation", "value": 68, "color": "pink"},

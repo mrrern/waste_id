@@ -7,7 +7,6 @@ from app.states.data import (
     quick_actions_data,
     resource_allocation_data,
     stat_card_data,
-    system_status_data,
 )
 
 
@@ -20,9 +19,9 @@ class StatCardData(TypedDict):
     chart_data: list[dict[str, int]]
 
 
-class SystemStatusData(TypedDict):
-    name: str
-    value: int
+class RecyclingData(TypedDict):
+    region: str
+    rate: float
     color: str
 
 
@@ -55,7 +54,12 @@ class DashboardState(rx.State):
     active_performance_tab: str = "Performance"
     mobile_sidebar_open: bool = False
     stat_cards: list[StatCardData] = stat_card_data
-    system_status: list[SystemStatusData] = system_status_data
+    recycling_data: list[RecyclingData] = [
+        {"region": "Latam & Caribbean", "rate": 2.75, "color": "red"},
+        {"region": "Europe", "rate": 42.77, "color": "blue"},
+        {"region": "North America", "rate": 52.13, "color": "green"},
+        {"region": "World", "rate": 22.3, "color": "yellow"},
+    ]
     resource_allocation: list[ResourceAllocationData] = resource_allocation_data
     quick_actions: list[QuickActionData] = quick_actions_data
     performance_chart_data: list[PerformanceChartData] = performance_chart_data
@@ -91,5 +95,4 @@ class DashboardState(rx.State):
             {"name": "Trazabilidad", "icon": "package"},
             {"name": "Calculadora de Impacto", "icon": "calculator"},
             {"name": "Datos Abiertos", "icon": "database"},
-            {"name": "Configuración", "icon": "settings"},
         ]

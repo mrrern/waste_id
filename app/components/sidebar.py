@@ -1,5 +1,5 @@
 import reflex as rx
-from app.states.dashboard_state import DashboardState, SystemStatusData
+from app.states.dashboard_state import DashboardState, RecyclingData
 
 
 def navigation_item(item: dict[str, str]) -> rx.Component:
@@ -15,19 +15,32 @@ def navigation_item(item: dict[str, str]) -> rx.Component:
     )
 
 
-def system_status_item(status: SystemStatusData) -> rx.Component:
+def recycling_data_item(item: RecyclingData) -> rx.Component:
     return rx.el.div(
         rx.el.div(
-            rx.el.span(status["name"], class_name="text-xs font-medium text-gray-400"),
+            rx.el.span(item["region"], class_name="text-xs font-medium text-gray-400"),
             rx.el.span(
-                f"{status['value']}%", class_name="text-xs font-semibold text-gray-200"
+                item["rate"].to_string() + "%",
+                class_name="text-xs font-semibold text-gray-200",
             ),
             class_name="flex justify-between mb-1",
         ),
         rx.el.div(
             rx.el.div(
-                style={"width": f"{status['value']}%"},
-                class_name=f"h-1 rounded-full bg-gradient-to-r from-{status['color']}-500 to-{status['color']}-400",
+                style={"width": item["rate"].to_string() + "%"},
+                class_name=rx.cond(
+                    item["color"] == "red",
+                    "h-1 rounded-full bg-gradient-to-r from-red-500 to-red-400",
+                    rx.cond(
+                        item["color"] == "blue",
+                        "h-1 rounded-full bg-gradient-to-r from-blue-500 to-blue-400",
+                        rx.cond(
+                            item["color"] == "green",
+                            "h-1 rounded-full bg-gradient-to-r from-green-500 to-green-400",
+                            "h-1 rounded-full bg-gradient-to-r from-yellow-500 to-yellow-400",
+                        ),
+                    ),
+                ),
             ),
             class_name="w-full bg-gray-700 rounded-full h-1",
         ),
@@ -60,11 +73,11 @@ def sidebar() -> rx.Component:
             ),
             rx.el.div(
                 rx.el.h3(
-                    "SYSTEM STATUS",
+                    "E-WASTE RECYCLING RATE",
                     class_name="px-4 mb-3 text-xs font-semibold text-gray-500 uppercase tracking-wider",
                 ),
                 rx.el.div(
-                    rx.foreach(DashboardState.system_status, system_status_item),
+                    rx.foreach(DashboardState.recycling_data, recycling_data_item),
                     class_name="px-4",
                 ),
                 class_name="mt-auto pt-6 border-t border-gray-700/50 hidden md:block",
