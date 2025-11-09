@@ -73,7 +73,7 @@ def sidebar() -> rx.Component:
             ),
             rx.el.div(
                 rx.el.h3(
-                    "E-WASTE RECYCLING RATE",
+                    "TASAS DE RECICLAJE E-WASTE",
                     class_name="px-4 mb-3 text-xs font-semibold text-gray-500 uppercase tracking-wider",
                 ),
                 rx.el.div(
