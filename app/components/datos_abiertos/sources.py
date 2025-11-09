@@ -45,19 +45,17 @@ class DatosAbiertosState(DashboardState):
             },
         ]
 
-def source_card(source_data: dict) -> rx.Component:
+def source_card(name: str, description: str, url: str, icon: str, color: str) -> rx.Component:
     """Card component for displaying a data source."""
-    icon_name = str(source_data["icon"])
-    color_name = str(source_data["color"])
     return rx.el.div(
         rx.el.div(
             rx.el.div(
                 rx.el.h3(
-                    str(source_data["name"]),
+                    name,
                     class_name="text-lg font-bold text-cyan-300 mb-2",
                 ),
                 rx.el.p(
-                    str(source_data["description"]),
+                    description,
                     class_name="text-sm text-gray-400 mb-4",
                 ),
                 rx.el.a(
@@ -66,7 +64,7 @@ def source_card(source_data: dict) -> rx.Component:
                         "Visitar sitio",
                         class_name="flex items-center text-cyan-400 hover:text-cyan-300 transition-colors duration-150",
                     ),
-                    href=str(source_data["url"]),
+                    href=url,
                     target="_blank",
                     rel="noopener noreferrer",
                     class_name="inline-flex items-center",
@@ -74,8 +72,8 @@ def source_card(source_data: dict) -> rx.Component:
                 class_name="flex-1",
             ),
             rx.el.div(
-                rx.icon(tag=icon_name, class_name="size-8"),
-                class_name=f"p-3 rounded-lg bg-gradient-to-br from-{color_name}-500 to-{color_name}-600 text-white shadow-lg",
+                rx.icon(tag=icon, class_name="size-8"),
+                class_name=f"p-3 rounded-lg bg-gradient-to-br from-{color}-500 to-{color}-600 text-white shadow-lg",
             ),
             class_name="flex justify-between items-start gap-4",
         ),
@@ -95,9 +93,40 @@ def datos_abiertos_dashboard() -> rx.Component:
                 class_name="flex justify-between items-center mb-4",
             ),
             rx.el.div(
-                rx.foreach(
-                    DatosAbiertosState.sources_list,
-                    source_card,
+                source_card(
+                    "Our World in Data - Electronic Waste",
+                    "Datos y visualizaciones sobre tasas de reciclaje de residuos electrónicos y gestión de desechos a nivel global.",
+                    "https://ourworldindata.org/search?q=Electronic+waste+recycling+rate&resultType=all",
+                    "database",
+                    "cyan",
+                ),
+                source_card(
+                    "Global E-waste Monitor",
+                    "Monitoreo global de residuos electrónicos (e-waste) con estadísticas, datos y análisis sobre generación, recolección y reciclaje.",
+                    "https://globalewaste.org",
+                    "globe",
+                    "purple",
+                ),
+                source_card(
+                    "Global E-waste Monitor - Map",
+                    "Mapa interactivo que muestra la distribución geográfica de residuos electrónicos a nivel mundial.",
+                    "https://globalewaste.org/map/",
+                    "map",
+                    "teal",
+                ),
+                source_card(
+                    "Our World in Data - Waste Management",
+                    "Recursos completos sobre gestión de residuos, incluyendo datos sobre reciclaje, tratamiento y políticas de gestión de desechos.",
+                    "https://ourworldindata.org/waste-management",
+                    "recycle",
+                    "green",
+                ),
+                source_card(
+                    "Overpass Turbo",
+                    "Herramienta de consulta para datos geoespaciales de OpenStreetMap, útil para mapeo y análisis de ubicaciones relacionadas con gestión de residuos.",
+                    "https://overpass-turbo.eu/",
+                    "map-pin",
+                    "amber",
                 ),
                 class_name="grid grid-cols-1 md:grid-cols-2 gap-4",
             ),
