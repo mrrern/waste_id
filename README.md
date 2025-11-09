@@ -65,6 +65,14 @@ Si quieres empezar ahora:
 2. Clona el repositorio y crea una branch por feature/bugfix.
 3. Envía un Pull Request describiendo los cambios.
 
+## Sitio Web
+
+Aprende más sobre el proyecto en el [sitio web oficial del proyecto](https://wasteid.rdaphq.com)
+
+## Video del proyecto
+
+Conoce más sobre el proyecto y profundiza mirando el video en YouTube [aquí](https://youtu.be/EAzlR5bVmdI) 
+
 ## Licencia
 
 Este proyecto se distribuye bajo la Licencia MIT.
